@@ -40,7 +40,7 @@ def log_deployment():
     try:
         deployment_log_path = 'deployment_log.txt'
         with open(deployment_log_path, 'a') as log_file:
-            log_entry = f"Deployed at: {datetime.now()} | Version: {VERSION}\n"
+            log_entry = f"Accessed at: {datetime.now()} | Version: {VERSION}\n"
             log_file.write(log_entry)
     except Exception as e:
         st.error(f"Logging failed: {e}")
@@ -375,7 +375,7 @@ def main():
         )
 
     # Deployment Timestamp in Sidebar
-    st.sidebar.markdown(f"📅 Deployed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    st.sidebar.markdown(f"📅 Accessed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     # Global error handling sidebar
     st.sidebar.info("If you experience any issues, please refresh the page or contact support.")
