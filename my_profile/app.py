@@ -47,9 +47,26 @@ def main():
         initial_sidebar_state="expanded"
     )
 
-    # Custom CSS
+    # Custom CSS for Responsiveness and Logo
     st.markdown("""
     <style>
+    /* Responsive Base Styles */
+    @media (max-width: 768px) {
+        .main {
+            padding: 10px !important;
+        }
+        .stColumn {
+            width: 100% !important;
+        }
+        .skill-card {
+            height: auto !important;
+            margin-bottom: 10px;
+        }
+        .hero-section {
+            padding: 15px !important;
+        }
+    }
+
     .main {
         background-color: #f4f4f4;
         font-family: 'Arial', sans-serif;
@@ -59,6 +76,7 @@ def main():
         color: white;
         border-radius: 10px;
         transition: all 0.3s ease;
+        width: 100%;
     }
     .stButton>button:hover {
         background-color: #2980b9;
@@ -85,23 +103,32 @@ def main():
         border-radius: 15px;
         padding: 30px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        position: relative;
     }
     .profile-highlight {
         color: #2c3e50;
         font-weight: bold;
     }
-    .footer {
-        background-color: #333;
-        color: #fff;
-        padding: 20px 0;
-        text-align: center;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
+    .profile-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
     }
-    .footer a {
-        color: #fff;
-        text-decoration: none;
+    /* Circular Logo Styling */
+    .circular-logo {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: 3px solid #3498db;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    .circular-logo:hover {
+        transform: scale(1.1);
     }
     </style>
     """, unsafe_allow_html=True)
@@ -119,6 +146,13 @@ def main():
     # Home Page
     if selected == "Home":
         st.markdown("<div class='hero-section'>", unsafe_allow_html=True)
+        
+        # Circular Logo Placement
+        st.markdown("""
+        <img src="https://miro.medium.com/v2/resize:fit:1400/1*h-NxX0bCfPKqvWCLHS7oGQ.png" 
+             class="circular-logo" 
+             alt="Bioinformatics Logo">
+        """, unsafe_allow_html=True)
         
         # Profile Header
         col1, col2 = st.columns([2, 1])
@@ -150,12 +184,7 @@ def main():
                 with icon_cols[i]:
                     st.markdown(f"<div style='text-align:center;'><span style='font-size:48px;'>{item['icon']}</span><br><strong>{item['title']}</strong><br>{item['description']}</div>", unsafe_allow_html=True)
 
-        with col2:
-            # Profile Image with placeholder URL
-            st.image("https://via.placeholder.com/300", width=300)
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
+    
         # Research Impact Section
         st.markdown("## 📊 Research Potential")
         
@@ -170,6 +199,7 @@ def main():
             with metric_cols[i]:
                 st.metric(label=metric, value=value)
 
+    # [Rest of the code remains the same as in the original script]
     # Skills Page
     elif selected == "Skills":
         st.header("🛠️ Technical Skills")
@@ -271,21 +301,14 @@ def main():
         st.write("📞 WhatsApp: +263713144296")
         st.write("✉️ Email: mutahwalee@gmail.com")
 
-        # External WhatsApp Contact
+        # External WhatsApp Contact with updated styling
         st.markdown(
-            "<a href='https://wa.me/263713144296' target='_blank' style='display: inline-block; background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Message on WhatsApp</a>", 
+            "<a href='https://wa.me/263713144296' target='_blank' style='display: block; width: 100%; text-align: center; background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 10px;'>Message on WhatsApp</a>", 
             unsafe_allow_html=True
         )
 
     # Global error handling sidebar
     st.sidebar.info("If you experience any issues, please refresh the page or contact support.")
-
-    # Footer
-    st.markdown("""
-    <div class="footer">
-        Powered by <a href="https://www.linkedin.com/in/sir-libzy/">Sir Libzy</a>
-    </div>
-    """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
