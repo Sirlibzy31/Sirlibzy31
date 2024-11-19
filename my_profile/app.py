@@ -95,6 +95,13 @@ def main():
     # Custom CSS for Responsiveness and Styling
     st.markdown("""
     <style>
+    /* Blue Header Modification */
+    .stApp > header {
+        background-color: #3498db !important;
+        color: white !important;
+    }
+    
+    /* Existing Styles */
     /* Responsive Base Styles */
     @media (max-width: 768px) {
         .main {
