@@ -3,5 +3,3 @@ requests
 plotly
 streamlit-option-menu
 python-dotenv
-smtplib
-logging
