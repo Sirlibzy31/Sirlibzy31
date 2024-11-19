@@ -5,8 +5,50 @@ from streamlit_option_menu import option_menu
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import os
+from datetime import datetime
+
+# Version Tracking
+VERSION = "1.1.0"
+
+def check_for_updates():
+    """
+    Check for potential updates
+    """
+    try:
+        # Simulated update check
+        latest_version = "1.1.0"  # This could come from an external source
+        
+        if latest_version > VERSION:
+            st.sidebar.warning(f"""
+            🔄 Update Available! 
+            Current Version: {VERSION}
+            Latest Version: {latest_version}
+            
+            Please contact the developer or 
+            check the GitHub repository for updates.
+            """)
+        else:
+            st.sidebar.success(f"✅ You're running the latest version {VERSION}")
+    except Exception as e:
+        st.sidebar.error(f"Version check failed: {e}")
+
+def log_deployment():
+    """
+    Log deployment details
+    """
+    try:
+        deployment_log_path = 'deployment_log.txt'
+        with open(deployment_log_path, 'a') as log_file:
+            log_entry = f"Deployed at: {datetime.now()} | Version: {VERSION}\n"
+            log_file.write(log_entry)
+    except Exception as e:
+        st.error(f"Logging failed: {e}")
 
 def send_email(name, email, message):
+    """
+    Send email from contact form
+    """
     try:
         sender_email = st.secrets['SENDER_EMAIL']
         sender_password = st.secrets['SENDER_PASSWORD']
@@ -41,13 +83,16 @@ def send_email(name, email, message):
 def main():
     # Page Configuration
     st.set_page_config(
-        page_title="Liberty Mutahwa | Bioinformatics Portfolio",
+        page_title=f"Liberty Mutahwa | Portfolio (v{VERSION})",
         page_icon="🧬",
         layout="wide",
         initial_sidebar_state="expanded"
     )
 
-    # Custom CSS for Responsiveness and Logo
+    # Log Deployment
+    log_deployment()
+
+    # Custom CSS for Responsiveness and Styling
     st.markdown("""
     <style>
     /* Responsive Base Styles */
@@ -88,7 +133,7 @@ def main():
         padding: 20px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         transition: all 0.3s ease;
-        height: 200px;
+        height: 250px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -109,12 +154,6 @@ def main():
         color: #2c3e50;
         font-weight: bold;
     }
-    .profile-image {
-        max-width: 100%;
-        height: auto;
-        border-radius: 10px;
-    }
-    /* Circular Logo Styling */
     .circular-logo {
         width: 120px;
         height: 120px;
@@ -130,11 +169,31 @@ def main():
     .circular-logo:hover {
         transform: scale(1.1);
     }
+    .version-badge {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        background-color: #3498db;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        z-index: 1000;
+    }
     </style>
     """, unsafe_allow_html=True)
 
+    # Version Badge
+    st.markdown(f'<div class="version-badge">v{VERSION}</div>', unsafe_allow_html=True)
+
+    # Check for Updates
+    check_for_updates()
+
     # Navigation Menu
     with st.sidebar:
+        # Add Version Information to Sidebar
+        st.sidebar.info(f"Current Version: {VERSION}")
+        
         selected = option_menu(
             menu_title="Portfolio Navigation",
             options=["Home", "Skills", "Projects", "Research Interests", "Contact"],
@@ -184,7 +243,6 @@ def main():
                 with icon_cols[i]:
                     st.markdown(f"<div style='text-align:center;'><span style='font-size:48px;'>{item['icon']}</span><br><strong>{item['title']}</strong><br>{item['description']}</div>", unsafe_allow_html=True)
 
-    
         # Research Impact Section
         st.markdown("## 📊 Research Potential")
         
@@ -199,7 +257,6 @@ def main():
             with metric_cols[i]:
                 st.metric(label=metric, value=value)
 
-    # [Rest of the code remains the same as in the original script]
     # Skills Page
     elif selected == "Skills":
         st.header("🛠️ Technical Skills")
@@ -244,12 +301,14 @@ def main():
             {
                 "name": "Genomic Variant Analysis",
                 "description": "Developed machine learning models to predict genetic disease risks.",
-                "technologies": ["Python", "Scikit-learn", "Pandas"]
+                "technologies": ["Python", "Scikit-learn", "Pandas"],
+                "impact": "Improved early disease detection algorithms"
             },
             {
                 "name": "Drug Interaction Predictor",
                 "description": "Created a computational framework for predicting potential drug interactions.",
-                "technologies": ["R", "Bioconductor", "Machine Learning"]
+                "technologies": ["R", "Bioconductor", "Machine Learning"],
+                "impact": "Enhanced pharmaceutical research efficiency"
             }
         ]
 
@@ -257,6 +316,7 @@ def main():
             with st.expander(project["name"]):
                 st.write(project["description"])
                 st.write("Technologies:", ", ".join(project["technologies"]))
+                st.write("Project Impact:", project["impact"])
 
     # Research Interests Page
     elif selected == "Research Interests":
@@ -306,6 +366,9 @@ def main():
             "<a href='https://wa.me/263713144296' target='_blank' style='display: block; width: 100%; text-align: center; background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 10px;'>Message on WhatsApp</a>", 
             unsafe_allow_html=True
         )
+
+    # Deployment Timestamp in Sidebar
+    st.sidebar.markdown(f"📅 Deployed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     # Global error handling sidebar
     st.sidebar.info("If you experience any issues, please refresh the page or contact support.")
